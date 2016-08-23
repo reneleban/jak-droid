@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">JAK Droid</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">E-Mail</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign In with existing User</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
+    <string name="new_account">Register new Account</string>
+
+    <!-- Strings used in LoginActivity.java -->
+    <string name="error_invalid_token_type">Invalid Auth-Token Type</string>
+    <string name="FULL_ACCESS">Full Access</string>
+    <string name="FULL_ACCESS_LABEL">Full Access to a JAK Account</string>
+    <string name="login_label">Login</string>
+    <string name="signup_title">Sign Up</string>
+    <string name="label">JAK</string>
+    <string name="login_info">Please wait, logging in ...</string>
+    <string name="dialog_board_title">New Board</string>
+    <string name="account_created">Account was created</string>
+    <string name="choose_account">Pick Account</string>
+    <string name="account_invalidated">invalidated</string>
+
+    <!-- Strings used in BoardActivity.java -->
+    <string name="add_new_board">Add new Board</string>
+    <string name="add_new_board_name">Name</string>
+    <string name="add_new_board_button_positive">Add</string>
+    <string name="add_new_board_button_negative">Cancel</string>
+    <string name="error_loading_boards">Error while loading Boards</string>
+
+
+</resources>

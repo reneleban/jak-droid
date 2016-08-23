@@ -1,3 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">JAK Droid</string>
+    <string name="action_sign_in">Anmelden</string>
+    <string name="action_sign_in_short">Anmelden</string>
+    <string name="error_field_required">Dieses Feld ist ein Pflichtfeld</string>
+    <string name="error_incorrect_password">Das Passwort ist falsch</string>
+    <string name="error_invalid_email">Die E-Mail Adresse ist ungültig</string>
+    <string name="error_invalid_password">Das Passwort ist zu kurz</string>
+    <string name="new_account">Einen neuen Account anlegen</string>
+    <string name="permission_rationale">Für die vervollständigung der E-Mail Adressen wird die Zugriffsberechtigung auf
+        die Kontakte benötigt
+    </string>
+    <string name="prompt_email">E-Mail Adresse</string>
+    <string name="prompt_password">Passwort</string>
+    <string name="title_activity_login">Anmelden</string>
+    <string name="error_invalid_token_type">Ungültiger Tokentyp</string>
+    <string name="FULL_ACCESS">Vollzugriff</string>
+    <string name="FULL_ACCESS_LABEL">Vollzugriff auf einen JAK Account</string>
+    <string name="label">JAK</string>
+    <string name="login_info">Bitte warten, anmeldung läuft ...</string>
+    <string name="login_label">Anmelden</string>
+    <string name="signup_title">Registrieren</string>
 </resources>
