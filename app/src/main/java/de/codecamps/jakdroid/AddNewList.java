@@ -25,7 +25,7 @@ class AddNewList extends AsyncTask<String, Object, JSONObject> {
             Uri.Builder builder = new Uri.Builder().appendQueryParameter("name", params[0]);
             String query = builder.build().getEncodedQuery();
 
-            URL url = new URL("https://jak.codecamps.de/jak-list/lists/board/" + boardActivity.getAuthToken() + "/" + boardActivity.getActive_board_id());
+            URL url = new URL("https://jak.codecamps.de/jak-list/lists/board/" + boardActivity.getAuthToken() + "/" + boardActivity.getActiveBoardId());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("charset", "utf-8");
@@ -57,6 +57,6 @@ class AddNewList extends AsyncTask<String, Object, JSONObject> {
     }
 
     protected void onPostExecute(JSONObject jsonObject) {
-        new UpdateListElements(boardActivity).execute(boardActivity.getActive_board_id());
+        new UpdateListElements(boardActivity).execute(boardActivity.getActiveBoardId());
     }
 }
