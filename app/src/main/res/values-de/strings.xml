@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">JAK Droid</string>
-    <string name="action_sign_in">Anmelden</string>
+    <string name="action_sign_in">Mit einem existierenden Konto anmelden</string>
     <string name="action_sign_in_short">Anmelden</string>
     <string name="error_field_required">Dieses Feld ist ein Pflichtfeld</string>
     <string name="error_incorrect_password">Das Passwort ist falsch</string>
@@ -21,4 +21,15 @@
     <string name="login_info">Bitte warten, anmeldung läuft ...</string>
     <string name="login_label">Anmelden</string>
     <string name="signup_title">Registrieren</string>
+    <string name="account_created">Konto wurde erstellt</string>
+    <string name="account_invalidated">abgemeldet</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="add_new_board">Neues Board erstellen</string>
+    <string name="add_new_board_button_negative">Abbrechen</string>
+    <string name="add_new_board_button_positive">Hinzufügen</string>
+    <string name="add_new_board_name">Name</string>
+    <string name="choose_account">Account wählen</string>
+    <string name="dialog_board_title">Neues Board</string>
+    <string name="error_loading_boards">Während dem laden der Boards ist ein Fehler aufgetreten</string>
+    <string name="add_new_list">Liste hinzufügen</string>
 </resources>
