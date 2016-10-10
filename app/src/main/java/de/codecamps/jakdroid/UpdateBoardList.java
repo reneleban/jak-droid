@@ -21,9 +21,6 @@ import java.net.URL;
 import java.text.Collator;
 import java.util.*;
 
-/**
- * Created by rene on 03.09.16.
- */
 class UpdateBoardList extends AsyncTask<String, Object, List<Board>> {
     private BoardActivity boardActivity;
 

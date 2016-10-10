@@ -35,8 +35,6 @@ public class BoardActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        // TODO: retrieve initial board and lists
-
         viewPager.setAdapter(adapter);
     }
 
@@ -118,13 +116,35 @@ public class BoardActivity extends AppCompatActivity {
                     BoardActivity.Adapter adapter = ((Adapter) ((ViewPager) findViewById(R.id.viewpager)).getAdapter());
                     Fragment fragment = adapter.getItem(tabs.getSelectedTabPosition());
                     Bundle b = fragment.getArguments();
-                    String listId = b.getString("uuid");
+                    String listId = b.getString("list_id");
 
-                    Snackbar.make(v, "TODO: add new card to list: " + listId,
-                            Snackbar.LENGTH_LONG).show();
+                    showNewCardDialog(listId);
                 }
             }
         });
+    }
+
+    private void showNewCardDialog(final String listId){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.dialog_new_card, null);
+        dialogBuilder.setView(dialogView);
+        final EditText edt = (EditText) dialogView.findViewById(R.id.new_card_title);
+        dialogBuilder.setTitle(getString(R.string.add_new_card));
+        dialogBuilder.setMessage(getString(R.string.add_new_card_name));
+        dialogBuilder.setPositiveButton(getString(R.string.add_new_card_button_positive), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                new AddNewCard(BoardActivity.this).execute(listId, edt.getText().toString());
+            }
+        });
+        dialogBuilder.setNegativeButton(getString(R.string.add_new_card_button_negative), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                edt.setText("");
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
+
     }
 
     private void showNewBoardDialog() {

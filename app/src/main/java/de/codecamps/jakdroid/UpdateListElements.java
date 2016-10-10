@@ -68,7 +68,8 @@ class UpdateListElements extends AsyncTask<String, Object, List<ListElement>> {
         adapter.removeAllFragments();
         for(ListElement element: listItems){
             Bundle arguments = new Bundle();
-            arguments.putString("uuid", element.getList_id());
+            arguments.putString("auth_token", boardActivity.getAuthToken());
+            arguments.putString("list_id", element.getList_id());
             arguments.putString("board_id", element.getBoard_id());
             arguments.putString("owner", element.getOwner());
             CardContentFragment cardContentFragment = new CardContentFragment();

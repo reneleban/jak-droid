@@ -52,4 +52,8 @@
     <string name="delete_board">Delete Board</string>
     <string name="no_board_chosen">Please choose board first!</string>
     <string name="no_list_chosen">Please choose list first!</string>
+    <string name="add_new_card">Add new Card</string>
+    <string name="add_new_card_name">Name</string>
+    <string name="add_new_card_button_positive">Add</string>
+    <string name="add_new_card_button_negative">Cancel</string>
 </resources>

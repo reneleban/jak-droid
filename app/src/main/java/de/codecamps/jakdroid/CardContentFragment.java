@@ -35,6 +35,20 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import de.codecamps.jakdroid.auth.AccountGeneral;
+import de.codecamps.jakdroid.data.Card;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
 
 public class CardContentFragment extends Fragment {
     @Nullable
@@ -42,34 +56,37 @@ public class CardContentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         RecyclerView recyclerView = (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
-        ContentAdapter adapter = new ContentAdapter(recyclerView.getContext(),getArguments().getString("uuid"));
-        recyclerView.setAdapter(adapter);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        return recyclerView;
+
+        try {
+            List<Card> cardList = new UpdateCardList(getArguments().getString("auth_token")).execute(getArguments().getString("list_id")).get();
+            ContentAdapter adapter = new ContentAdapter(cardList, getContext(), getArguments().getString("list_id"));
+            recyclerView.setAdapter(adapter);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            return recyclerView;
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return null;
 
     }
 
     public static class ContentAdapter extends RecyclerView.Adapter<ViewHolder> {
-        // TODO retrieve real data
-        private static final int LENGTH = 18;
-        private final String[] mPlaces;
-        private final String[] mPlaceDesc;
-        private final Drawable[] mPlacePictures;
-        private String uuid;
-        public ContentAdapter(Context context, String uuid) {
-            // TODO: retrieve real list data!
-            Resources resources = context.getResources();
-            mPlaces = resources.getStringArray(R.array.places);
-            mPlaceDesc = resources.getStringArray(R.array.place_desc);
-            TypedArray a = resources.obtainTypedArray(R.array.places_picture);
-            mPlacePictures = new Drawable[a.length()];
-            for (int i = 0; i < mPlacePictures.length; i++) {
-                mPlacePictures[i] = a.getDrawable(i);
-            }
-            a.recycle();
-            this.uuid = uuid;
+        private Context context;
+        private String list_id;
+        private List<Card> cardList;
+
+        public ContentAdapter(List<Card> cardList, Context context, String list_id) {
+            this.cardList = cardList;
+            this.context = context;
+            this.list_id = list_id;
         }
+
+
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -78,17 +95,25 @@ public class CardContentFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            Log.d(AccountGeneral.ACCOUNT_NAME, String.format("Retrieving item %d from list %s", position, uuid));
-            holder.picture.setImageDrawable(mPlacePictures[position % mPlacePictures.length]);
-            holder.name.setText(mPlaces[position % mPlaces.length]);
-            holder.description.setText(mPlaceDesc[position % mPlaceDesc.length]);
+            Log.d(AccountGeneral.ACCOUNT_NAME, String.format("Retrieving item %d from list %s", position, list_id));
+            Card card = cardList.get(position);
+            if(card!=null) {
+                holder.picture.setImageDrawable(context.getDrawable(R.drawable.a));
+                holder.name.setText(card.getName());
+                holder.description.setText(card.getDescription());
+            }
         }
 
         @Override
         public int getItemCount() {
-            return LENGTH;
+            return cardList.size();
+        }
+
+        public void add(Card c){
+            cardList.add(c);
         }
     }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView picture;
