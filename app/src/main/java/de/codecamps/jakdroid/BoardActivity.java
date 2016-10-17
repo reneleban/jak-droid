@@ -111,20 +111,19 @@ public class BoardActivity extends AppCompatActivity {
                 if (getActiveBoardId() == null) {
                     Snackbar.make(getCurrentFocus(), getString(R.string.no_list_chosen), Snackbar.LENGTH_LONG).show();
                 } else {
-                    TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
-
-                    BoardActivity.Adapter adapter = ((Adapter) ((ViewPager) findViewById(R.id.viewpager)).getAdapter());
-                    Fragment fragment = adapter.getItem(tabs.getSelectedTabPosition());
-                    Bundle b = fragment.getArguments();
-                    String listId = b.getString("list_id");
-
-                    showNewCardDialog(listId);
+                    showNewCardDialog();
                 }
             }
         });
     }
 
-    private void showNewCardDialog(final String listId){
+    private void showNewCardDialog(){
+        TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
+        BoardActivity.Adapter adapter = ((Adapter) ((ViewPager) findViewById(R.id.viewpager)).getAdapter());
+        Fragment fragment = adapter.getItem(tabs.getSelectedTabPosition());
+        Bundle b = fragment.getArguments();
+        final String listId = b.getString("list_id");
+
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_new_card, null);
@@ -142,9 +141,8 @@ public class BoardActivity extends AppCompatActivity {
                 edt.setText("");
             }
         });
-        AlertDialog b = dialogBuilder.create();
-        b.show();
-
+        AlertDialog ad = dialogBuilder.create();
+        ad.show();
     }
 
     private void showNewBoardDialog() {
@@ -252,6 +250,16 @@ public class BoardActivity extends AppCompatActivity {
             if (menuItem.getItemId() == R.id.add_new_board) {
                 showNewBoardDialog();
             } else {
+
+                /**
+                 * TODO: find better uncheck solution!
+                 */
+                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                SubMenu boards = navigationView.getMenu().findItem(0).getSubMenu();
+                for(int i=0; i< boards.size(); i++){
+                    boards.getItem(i).setChecked(false);
+                }
+
                 // Set item in checked state
                 menuItem.setChecked(true);
                 Intent intent = menuItem.getIntent();

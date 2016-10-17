@@ -62,7 +62,7 @@ class AddNewCard extends AsyncTask<String, Object, JSONObject> {
 
     protected void onPostExecute(JSONObject jsonObject) {
         ViewPager viewPager = (ViewPager) boardActivity.findViewById(R.id.viewpager);
-        RecyclerView recyclerView = (RecyclerView) viewPager.getChildAt(viewPager.getCurrentItem());
+        RecyclerView recyclerView = (RecyclerView) viewPager.getFocusedChild();
         CardContentFragment.ContentAdapter adapter = (CardContentFragment.ContentAdapter) recyclerView.getAdapter();
         try {
             adapter.add(new Card(jsonObject));
