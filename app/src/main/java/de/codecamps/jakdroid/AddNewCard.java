@@ -67,6 +67,7 @@ class AddNewCard extends AsyncTask<String, Object, JSONObject> {
         try {
             adapter.add(new Card(jsonObject));
             adapter.notifyDataSetChanged();
+            recyclerView.refreshDrawableState();
         } catch (JSONException e) {
             e.printStackTrace();
         }

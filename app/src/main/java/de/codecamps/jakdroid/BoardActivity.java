@@ -10,6 +10,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -38,12 +39,98 @@ public class BoardActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.act_board);
+
+        this.boardActivityReference = this;
+        authToken = getSharedPreferences(AccountGeneral.ACCOUNT_TYPE, Context.MODE_PRIVATE).getString(AccountGeneral.ACCOUNT_NAME, null);
+
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        // Setting ViewPager for each Tabs
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
+        // Set Tabs inside Toolbar
+        TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
+        tabs.setupWithViewPager(viewPager);
+
+        // initialize drawer navigation
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        new UpdateBoardList(this).execute();
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+
+        // Adding menu icon to Toolbar
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        // Set behavior of Navigation drawer
+        NavigationView.OnNavigationItemSelectedListener navigationItemListener = new BoardOnNavigationItemSelectedListener(toolbar);
+        navigationView.setNavigationItemSelectedListener(navigationItemListener);
+
+        // add new card button
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (getActiveBoardId() == null) {
+                    Snackbar.make(getCurrentFocus(), getString(R.string.no_list_chosen), Snackbar.LENGTH_LONG).show();
+                } else {
+                    showNewCardDialog();
+                }
+            }
+        });
+    }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.list, menu);
         return true;
     }
 
+    /**
+     * Fragment Adapter for ViewPager
+     */
+    static class Adapter extends FragmentStatePagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        Adapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        void removeAllFragments() {
+            mFragmentList.clear();
+            mFragmentTitleList.clear();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
+    }
+
+    // add new list, open drawer (offcanvas)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -66,58 +153,48 @@ public class BoardActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.act_board);
+    private class BoardOnNavigationItemSelectedListener implements NavigationView.OnNavigationItemSelectedListener {
+        private final Toolbar toolbar;
 
-        this.boardActivityReference = this;
-        authToken = getSharedPreferences(AccountGeneral.ACCOUNT_TYPE, Context.MODE_PRIVATE).getString(AccountGeneral.ACCOUNT_NAME, null);
-
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        // Setting ViewPager for each Tabs
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
-        // Set Tabs inside Toolbar
-        TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
-
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        new UpdateBoardList(this).execute();
-
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-
-        // Adding menu icon to Toolbar
-        ActionBar supportActionBar = getSupportActionBar();
-        if (supportActionBar != null) {
-            supportActionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
-            supportActionBar.setDisplayHomeAsUpEnabled(true);
+        BoardOnNavigationItemSelectedListener(Toolbar toolbar) {
+            this.toolbar = toolbar;
         }
 
-        // Set behavior of Navigation drawer
-        NavigationView.OnNavigationItemSelectedListener navigationItemListener = new BoardOnNavigationItemSelectedListener(toolbar);
+        // select board and load lists
+        @Override
+        public boolean onNavigationItemSelected(MenuItem menuItem) {
+            if (menuItem.getItemId() == R.id.add_new_board) {
+                showNewBoardDialog();
+            } else {
 
-        navigationView.setNavigationItemSelectedListener(
-                navigationItemListener);
+                /**
+                 * TODO: find better uncheck solution!
+                 */
+                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                SubMenu boards = navigationView.getMenu().findItem(0).getSubMenu();
+                for (int i = 0; i < boards.size(); i++) {
+                    boards.getItem(i).setChecked(false);
+                }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (getActiveBoardId() == null) {
-                    Snackbar.make(getCurrentFocus(), getString(R.string.no_list_chosen), Snackbar.LENGTH_LONG).show();
-                } else {
-                    showNewCardDialog();
+                // Set item in checked state
+                menuItem.setChecked(true);
+                Intent intent = menuItem.getIntent();
+                if (intent != null) {
+                    String boardId = intent.getStringExtra("board_id");
+                    toolbar.setTitle(intent.getStringExtra("board_name"));
+                    if (boardId != null && !boardId.isEmpty()) {
+                        activeBoardId = boardId;
+                        Log.d(AccountGeneral.ACCOUNT_NAME, String.format("Called item with uuid: %s", boardId));
+                        new UpdateListElements(boardActivityReference).execute(boardId); // load board lists and update views!
+                    }
                 }
             }
-        });
+            mDrawerLayout.closeDrawers();
+            return true;
+        }
     }
 
-    private void showNewCardDialog(){
+    private void showNewCardDialog() {
         TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
         BoardActivity.Adapter adapter = ((Adapter) ((ViewPager) findViewById(R.id.viewpager)).getAdapter());
         Fragment fragment = adapter.getItem(tabs.getSelectedTabPosition());
@@ -193,88 +270,11 @@ public class BoardActivity extends AppCompatActivity {
         b.show();
     }
 
-
-    static class Adapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        Adapter(FragmentManager manager) {
-            super(manager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
-
-        void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        void removeAllFragments() {
-            mFragmentList.clear();
-            mFragmentTitleList.clear();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
-    }
-
-
     String getActiveBoardId() {
         return activeBoardId;
     }
 
     String getAuthToken() {
         return authToken;
-    }
-
-
-    private class BoardOnNavigationItemSelectedListener implements NavigationView.OnNavigationItemSelectedListener {
-        private final Toolbar toolbar;
-
-        BoardOnNavigationItemSelectedListener(Toolbar toolbar) {
-            this.toolbar = toolbar;
-        }
-
-        @Override
-        public boolean onNavigationItemSelected(MenuItem menuItem) {
-            if (menuItem.getItemId() == R.id.add_new_board) {
-                showNewBoardDialog();
-            } else {
-
-                /**
-                 * TODO: find better uncheck solution!
-                 */
-                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-                SubMenu boards = navigationView.getMenu().findItem(0).getSubMenu();
-                for(int i=0; i< boards.size(); i++){
-                    boards.getItem(i).setChecked(false);
-                }
-
-                // Set item in checked state
-                menuItem.setChecked(true);
-                Intent intent = menuItem.getIntent();
-                if (intent != null) {
-                    String boardId = intent.getStringExtra("board_id");
-                    toolbar.setTitle(intent.getStringExtra("board_name"));
-                    if (boardId != null && !boardId.isEmpty()) {
-                        activeBoardId = boardId;
-                        Log.d(AccountGeneral.ACCOUNT_NAME, String.format("Called item with uuid: %s", boardId));
-                        new UpdateListElements(boardActivityReference).execute(boardId); // load board lists and update views!
-                    }
-                }
-            }
-            mDrawerLayout.closeDrawers();
-            return true;
-        }
     }
 }

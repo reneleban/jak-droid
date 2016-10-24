@@ -66,22 +66,19 @@ public class CardContentFragment extends Fragment {
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             return recyclerView;
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-
         return null;
 
     }
 
-    public class ContentAdapter extends RecyclerView.Adapter<ViewHolder> {
+    static class ContentAdapter extends RecyclerView.Adapter<ViewHolder> {
         private Context context;
         private String list_id;
         private List<Card> cardList;
 
-        public ContentAdapter(List<Card> cardList, Context context, String list_id) {
+        ContentAdapter(List<Card> cardList, Context context, String list_id) {
             this.cardList = cardList;
             this.context = context;
             this.list_id = list_id;
@@ -110,17 +107,17 @@ public class CardContentFragment extends Fragment {
             return cardList.size();
         }
 
-        public void add(Card c){
+        void add(Card c){
             cardList.add(c);
         }
     }
 
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView picture;
+     static class ViewHolder extends RecyclerView.ViewHolder {
+        private ImageView picture;
         private TextView name;
         private TextView description;
-        public ViewHolder(LayoutInflater inflater, ViewGroup parent) {
+        ViewHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.item_card, parent, false));
             picture = (ImageView) itemView.findViewById(R.id.card_image);
             name = (TextView) itemView.findViewById(R.id.card_title);
