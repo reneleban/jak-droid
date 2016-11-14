@@ -9,15 +9,11 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import de.codecamps.jakdroid.auth.AccountGeneral;
 import de.codecamps.jakdroid.data.Board;
+import de.codecamps.jakdroid.helpers.AsyncTaskHelpers;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.Collator;
 import java.util.*;
 
@@ -30,31 +26,8 @@ class UpdateBoardList extends AsyncTask<String, Object, List<Board>> {
 
     @Override
     protected List<Board> doInBackground(String... params) {
-        JSONArray boards = null;
-
         try {
-
-            URL url = new URL("https://jak.codecamps.de/jak-board/board/" + boardActivity.getAuthToken());
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            if (connection != null && connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                try (InputStream in = new BufferedInputStream(connection.getInputStream());
-                     Scanner s = new Scanner(in).useDelimiter("\\A");) {
-                    String response = s.hasNext() ? s.next() : null;
-                    boards = new JSONArray(response);
-                } catch (IOException | JSONException e) {
-                    e.printStackTrace();
-                } finally {
-                    connection.disconnect();
-                }
-            }
-
-            List<Board> boardList = new ArrayList<>();
-
-            for (int i = 0; i < boards.length(); i++) {
-                JSONObject board = boards.getJSONObject(i);
-                boardList.add(new Board(board));
-            }
-            return boardList;
+            return AsyncTaskHelpers.retrieveBoards(boardActivity.getAuthToken());
         } catch (IOException | JSONException e) {
             Log.e(AccountGeneral.ACCOUNT_NAME, "Error while loading Boards", e);
             return new ArrayList<>();

@@ -4,10 +4,9 @@ import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import de.codecamps.jakdroid.auth.AccountGeneral;
+import de.codecamps.jakdroid.helpers.AsyncTaskHelpers;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class DeleteCard extends AsyncTask<String, Object, String> {
     private String authToken;
@@ -24,12 +23,7 @@ public class DeleteCard extends AsyncTask<String, Object, String> {
     protected String doInBackground(String... params) {
         Log.d(AccountGeneral.ACCOUNT_NAME, String.format("UpdateCardList / doInBackground  Card: %s", params[0]));
         try {
-            URL url = new URL("https://jak.codecamps.de/jak-card/cards/" + authToken + "/" + params[0]);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("DELETE");
-            connection.setRequestProperty("charset", "utf-8");
-            connection.connect();
-            return connection.getResponseCode() == HttpURLConnection.HTTP_OK ? params[0] : null;
+            return AsyncTaskHelpers.deleteCard(authToken, params[0]);
         } catch (IOException e) {
             e.printStackTrace();
         }

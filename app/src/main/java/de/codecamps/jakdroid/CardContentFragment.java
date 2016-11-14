@@ -45,8 +45,8 @@ public class CardContentFragment extends Fragment {
                 R.layout.recycler_view, container, false);
 
 //        try {
-//            List<Card> cardList = new UpdateCardList(getArguments().getString("auth_token")).execute(getArguments().getString("list_id")).get();
-//            ContentAdapter adapter = new ContentAdapter(cardList, getContext(), getArguments().getString("list_id"));
+//            List<Card> cardList = new UpdateCardList(getArguments().deleteCard("auth_token")).execute(getArguments().deleteCard("list_id")).get();
+//            ContentAdapter adapter = new ContentAdapter(cardList, getContext(), getArguments().deleteCard("list_id"));
 //            recyclerView.setAdapter(adapter);
 //            recyclerView.setHasFixedSize(true);
 //            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

@@ -17,6 +17,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.*;
@@ -215,7 +216,8 @@ public class BoardActivity extends AppCompatActivity {
 
     private void showNewCardDialog() {
         TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
-        BoardActivity.Adapter adapter = ((Adapter) ((ViewPager) findViewById(R.id.viewpager)).getAdapter());
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        final BoardActivity.Adapter adapter = ((Adapter) viewPager.getAdapter());
         Fragment fragment = adapter.getItem(tabs.getSelectedTabPosition());
         Bundle b = fragment.getArguments();
         final String listId = b.getString("list_id");
@@ -229,7 +231,8 @@ public class BoardActivity extends AppCompatActivity {
         dialogBuilder.setMessage(getString(R.string.add_new_card_name));
         dialogBuilder.setPositiveButton(getString(R.string.add_new_card_button_positive), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                new AddNewCard(BoardActivity.this).execute(listId, edt.getText().toString());
+                RecyclerView recyclerView = (RecyclerView) (adapter.getItem(viewPager.getCurrentItem())).getView();
+                new AddNewCard(getAuthToken(), recyclerView).execute(listId, edt.getText().toString());
             }
         });
         dialogBuilder.setNegativeButton(getString(R.string.add_new_card_button_negative), new DialogInterface.OnClickListener() {
