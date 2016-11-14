@@ -1,6 +1,8 @@
 package de.codecamps.jakdroid;
 
 import android.os.AsyncTask;
+import android.util.Log;
+import de.codecamps.jakdroid.auth.AccountGeneral;
 import de.codecamps.jakdroid.data.Card;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,11 +21,15 @@ public class UpdateCardList extends AsyncTask<String, Object, List<Card>> {
     private String authToken;
 
     public UpdateCardList(String authToken) {
+        Log.d(AccountGeneral.ACCOUNT_NAME, "UpdateCardList instanciate");
+
         this.authToken = authToken;
     }
 
     @Override
     protected List<Card> doInBackground(String... params) {
+        Log.d(AccountGeneral.ACCOUNT_NAME, String.format("UpdateCardList / doInBackground  list: %s", params[0]));
+
         JSONArray cardArray = null;
 
         try {
@@ -58,6 +64,7 @@ public class UpdateCardList extends AsyncTask<String, Object, List<Card>> {
 
     @Override
     protected void onPostExecute(List<Card> cards) {
+        Log.d(AccountGeneral.ACCOUNT_NAME, String.format("UpdateCardList / doInBackground  items: %s", cards.size()));
 
         super.onPostExecute(cards);
     }

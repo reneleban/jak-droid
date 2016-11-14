@@ -96,7 +96,7 @@ public class BoardActivity extends AppCompatActivity {
     /**
      * Fragment Adapter for ViewPager
      */
-    static class Adapter extends FragmentStatePagerAdapter {
+    class Adapter extends FragmentStatePagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
@@ -122,6 +122,11 @@ public class BoardActivity extends AppCompatActivity {
         void removeAllFragments() {
             mFragmentList.clear();
             mFragmentTitleList.clear();
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
         }
 
         @Override

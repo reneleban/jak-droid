@@ -3,6 +3,7 @@ package de.codecamps.jakdroid;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import de.codecamps.jakdroid.auth.AccountGeneral;
 import de.codecamps.jakdroid.data.ListElement;
@@ -29,7 +30,7 @@ class UpdateListElements extends AsyncTask<String, Object, List<ListElement>> {
     @Override
     protected List<ListElement> doInBackground(String... params) {
         JSONArray listItems = null;
-        Log.d(AccountGeneral.ACCOUNT_NAME, "Fetcing new Lists for Board "+params[0]);
+        Log.d(AccountGeneral.ACCOUNT_NAME, "Fetching new Lists for Board "+params[0]);
         try {
 
             URL url = new URL("https://jak.codecamps.de/jak-list/lists/list/" + boardActivity.getAuthToken() + "/"+params[0]);

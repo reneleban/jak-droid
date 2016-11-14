@@ -17,20 +17,23 @@
 package de.codecamps.jakdroid;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -58,22 +61,41 @@ public class CardContentFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) inflater.inflate(
                 R.layout.recycler_view, container, false);
 
+//        try {
+//            List<Card> cardList = new UpdateCardList(getArguments().getString("auth_token")).execute(getArguments().getString("list_id")).get();
+//            ContentAdapter adapter = new ContentAdapter(cardList, getContext(), getArguments().getString("list_id"));
+//            recyclerView.setAdapter(adapter);
+//            recyclerView.setHasFixedSize(true);
+//            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//            return recyclerView;
+//
+//        } catch (ExecutionException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+
+        return recyclerView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        RecyclerView recyclerView = (RecyclerView) view;
         try {
             List<Card> cardList = new UpdateCardList(getArguments().getString("auth_token")).execute(getArguments().getString("list_id")).get();
             ContentAdapter adapter = new ContentAdapter(cardList, getContext(), getArguments().getString("list_id"));
             recyclerView.setAdapter(adapter);
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            return recyclerView;
-
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        return null;
-
     }
 
-    static class ContentAdapter extends RecyclerView.Adapter<ViewHolder> {
+    /**
+     * data for card list
+     */
+    class ContentAdapter extends RecyclerView.Adapter<ViewHolder> {
         private Context context;
         private String list_id;
         private List<Card> cardList;
@@ -83,8 +105,6 @@ public class CardContentFragment extends Fragment {
             this.context = context;
             this.list_id = list_id;
         }
-
-
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -113,7 +133,10 @@ public class CardContentFragment extends Fragment {
     }
 
 
-     static class ViewHolder extends RecyclerView.ViewHolder {
+    /**
+     * card
+     */
+     class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView picture;
         private TextView name;
         private TextView description;
