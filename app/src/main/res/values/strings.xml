@@ -56,4 +56,5 @@
     <string name="add_new_card_name">Name</string>
     <string name="add_new_card_button_positive">Add</string>
     <string name="add_new_card_button_negative">Cancel</string>
+    <string name="delete_board">Delete current Board</string>
 </resources>

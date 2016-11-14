@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="ADD_NEW_BOARD_URL" formatted="false">https://jak.codecamps.de/jak-board/board/%s</string>
-    <string name="RETRIEVE_BOARDS_URL" formatted="false">https://jak.codecamps.de/jak-board/board/%s</string>
+    <string name="ADD_NEW_BOARD_URL" formatted="false" translatable="false">https://jak.codecamps.de/jak-board/board/%s</string>
+    <string name="RETRIEVE_BOARDS_URL" formatted="false" translatable="false">https://jak.codecamps.de/jak-board/board/%s</string>
 
-    <string name="ADD_NEW_CARD_URL" formatted="false">https://jak.codecamps.de/jak-card/cards/%s/%s</string>
-    <string name="RETRIEVE_CARDS_URL" formatted="false">https://jak.codecamps.de/jak-card/cards/%s/%s</string>
-    <string name="DELETE_CARD_URL" formatted="false">https://jak.codecamps.de/jak-card/cards/%s/%s</string>
-    <string name="DELETE_CARDS_FROM_LIST_URL" formatted="false">https://jak.codecamps.de/jak-card/cards/list/%s/%s</string>
+    <string name="ADD_NEW_CARD_URL" formatted="false" translatable="false">https://jak.codecamps.de/jak-card/cards/%s/%s</string>
+    <string name="RETRIEVE_CARDS_URL" formatted="false" translatable="false">https://jak.codecamps.de/jak-card/cards/%s/%s</string>
+    <string name="DELETE_CARD_URL" formatted="false" translatable="false">https://jak.codecamps.de/jak-card/cards/%s/%s</string>
+    <string name="DELETE_CARDS_FROM_LIST_URL" formatted="false" translatable="false">https://jak.codecamps.de/jak-card/cards/list/%s/%s</string>
 
-    <string name="ADD_NEW_LIST_URL" formatted="false">https://jak.codecamps.de/jak-list/lists/board/%s/%s</string>
-    <string name="RETRIEVE_LISTS_URL" formatted="false">https://jak.codecamps.de/jak-list/lists/list/%s/%s</string>
-    <string name="DELETE_LIST_URL" formatted="false">https://jak.codecamps.de/jak-list/lists/list/%s/%s</string>
+    <string name="ADD_NEW_LIST_URL" formatted="false" translatable="false">https://jak.codecamps.de/jak-list/lists/board/%s/%s</string>
+    <string name="RETRIEVE_LISTS_URL" formatted="false" translatable="false">https://jak.codecamps.de/jak-list/lists/list/%s/%s</string>
+    <string name="DELETE_LIST_URL" formatted="false" translatable="false">https://jak.codecamps.de/jak-list/lists/list/%s/%s</string>
 </resources>

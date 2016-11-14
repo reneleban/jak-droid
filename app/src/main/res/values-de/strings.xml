@@ -43,4 +43,5 @@
     <string name="menu_boards">Boards</string>
     <string name="no_board_chosen">Bitte wählen sie vorher ein Board aus</string>
     <string name="no_list_chosen">Bitte wählen sie vorher eine Liste aus</string>
+    <string name="delete_board">Aktives Board löschen</string>
 </resources>
