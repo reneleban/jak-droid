@@ -49,7 +49,7 @@
     <string name="add_new_list_button_negative">Cancel</string>
 
     <string name="menu_boards">Boards</string>
-    <string name="delete_board">Delete Board</string>
+    <string name="delete_list">Delete List</string>
     <string name="no_board_chosen">Please choose board first!</string>
     <string name="no_list_chosen">Please choose list first!</string>
     <string name="add_new_card">Add new Card</string>

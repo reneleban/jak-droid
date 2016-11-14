@@ -32,4 +32,15 @@
     <string name="dialog_board_title">Neues Board</string>
     <string name="error_loading_boards">Während dem laden der Boards ist ein Fehler aufgetreten</string>
     <string name="add_new_list">Liste hinzufügen</string>
+    <string name="delete_list">Liste löschen</string>
+    <string name="add_new_list_name">Name</string>
+    <string name="add_new_card">Neue Karte</string>
+    <string name="add_new_card_button_negative">Abbruch</string>
+    <string name="add_new_card_button_positive">Hinzufügen</string>
+    <string name="add_new_card_name">Name</string>
+    <string name="add_new_list_button_negative">Abbruch</string>
+    <string name="add_new_list_button_positive">Hinzufügen</string>
+    <string name="menu_boards">Boards</string>
+    <string name="no_board_chosen">Bitte wählen sie vorher ein Board aus</string>
+    <string name="no_list_chosen">Bitte wählen sie vorher eine Liste aus</string>
 </resources>

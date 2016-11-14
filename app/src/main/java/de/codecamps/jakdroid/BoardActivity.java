@@ -9,7 +9,6 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -18,6 +17,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 import android.util.Log;
@@ -133,14 +133,30 @@ public class BoardActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+
+        public void removePosition(int pos){
+            mFragmentTitleList.remove(pos);
+            mFragmentList.remove(pos);
+        }
     }
 
     // add new list, open drawer (offcanvas)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.delete_board_toolbar:
-                // TODO Implement Delete current item load first board
+            case R.id.delete_list_toolbar:
+                ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+
+                BoardActivity.Adapter adapter = ((Adapter) ((ViewPager) findViewById(R.id.viewpager)).getAdapter());
+
+                Fragment fragment = adapter.getItem(viewPager.getCurrentItem());
+                Bundle b = fragment.getArguments();
+                final String listId = b.getString("list_id");
+                adapter.removePosition(viewPager.getCurrentItem());
+                adapter.notifyDataSetChanged();
+
+                new DeleteList(authToken).execute(listId);
+
                 return super.onOptionsItemSelected(item);
             case R.id.add_new_list_toolbar:
                 if (getActiveBoardId() == null) {

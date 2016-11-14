@@ -123,6 +123,10 @@ public class CardContentFragment extends Fragment {
                 }
             }
         }
+
+        public String getList_id() {
+            return list_id;
+        }
     }
 
 
