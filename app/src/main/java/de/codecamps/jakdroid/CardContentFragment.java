@@ -17,41 +17,22 @@
 package de.codecamps.jakdroid;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.*;
-import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import de.codecamps.jakdroid.auth.AccountGeneral;
 import de.codecamps.jakdroid.data.Card;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
 public class CardContentFragment extends Fragment {
@@ -119,6 +100,7 @@ public class CardContentFragment extends Fragment {
                 holder.picture.setImageDrawable(context.getDrawable(R.drawable.a));
                 holder.name.setText(card.getName());
                 holder.description.setText(card.getDescription());
+                holder.card = card;
             }
         }
 
@@ -130,6 +112,17 @@ public class CardContentFragment extends Fragment {
         void add(Card c){
             cardList.add(c);
         }
+        void remove(String cardId){
+            if(cardId==null)
+                return;
+
+            for(Card c : cardList){
+                if(c.getCardId().equals(cardId)){
+                    cardList.remove(c);
+                    break;
+                }
+            }
+        }
     }
 
 
@@ -140,6 +133,9 @@ public class CardContentFragment extends Fragment {
         private ImageView picture;
         private TextView name;
         private TextView description;
+
+        private Card card;
+
         ViewHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.item_card, parent, false));
             picture = (ImageView) itemView.findViewById(R.id.card_image);
@@ -165,12 +161,13 @@ public class CardContentFragment extends Fragment {
                 }
             });
 
-            ImageButton shareImageButton = (ImageButton) itemView.findViewById(R.id.share_button);
+            ImageButton shareImageButton = (ImageButton) itemView.findViewById(R.id.delete_card_button);
             shareImageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Snackbar.make(v, "Share article",
+                    Snackbar.make(v, "Delete Card",
                             Snackbar.LENGTH_LONG).show();
+                   new DeleteCard(getArguments().getString("auth_token"), (RecyclerView) itemView.getParent()).execute(card.getCardId());
                 }
             });
         }
