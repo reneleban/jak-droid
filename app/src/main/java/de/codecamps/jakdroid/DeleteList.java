@@ -1,7 +1,6 @@
 package de.codecamps.jakdroid;
 
 import android.os.AsyncTask;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import de.codecamps.jakdroid.auth.AccountGeneral;
 
@@ -27,13 +26,13 @@ public class DeleteList extends AsyncTask<String, Object, String> {
             connection.setRequestMethod("DELETE");
             connection.setRequestProperty("charset", "utf-8");
             connection.connect();
-            if(connection.getResponseCode() == HttpURLConnection.HTTP_OK){
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 url = new URL("https://jak.codecamps.de/jak-list/lists/list/" + authToken + "/" + params[0]);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("DELETE");
                 connection.setRequestProperty("charset", "utf-8");
                 connection.connect();
-                return connection.getResponseCode() == HttpURLConnection.HTTP_OK?params[0]:null;
+                return connection.getResponseCode() == HttpURLConnection.HTTP_OK ? params[0] : null;
             } else return null;
         } catch (IOException e) {
             e.printStackTrace();

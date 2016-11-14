@@ -67,14 +67,14 @@ class UpdateBoardList extends AsyncTask<String, Object, List<Board>> {
         Menu navMenu = navigationView.getMenu();
 
         int menuId = -1;
-        for(int i=0; i< navMenu.size(); i++){
-            if(boardActivity.getString(R.string.menu_boards).equalsIgnoreCase(navMenu.getItem(i).getTitle().toString())){
+        for (int i = 0; i < navMenu.size(); i++) {
+            if (boardActivity.getString(R.string.menu_boards).equalsIgnoreCase(navMenu.getItem(i).getTitle().toString())) {
                 menuId = i;
             }
         }
 
         SubMenu subMenu;
-        if(menuId == -1)
+        if (menuId == -1)
             subMenu = navMenu.addSubMenu(R.string.menu_boards);
         else
             subMenu = navMenu.getItem(menuId).getSubMenu();

@@ -10,7 +10,7 @@ public class Card {
     private String description;
     private String owner;
 
-    public Card(JSONObject cardElement)  throws JSONException {
+    public Card(JSONObject cardElement) throws JSONException {
         this.listId = cardElement.getString("list_id");
         this.cardId = cardElement.getString("card_id");
         this.name = cardElement.getString("name");

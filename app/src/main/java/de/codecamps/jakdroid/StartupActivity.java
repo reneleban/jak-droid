@@ -32,7 +32,7 @@ public class StartupActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_startup);
         mAccountManager = AccountManager.get(this);
-        if(!getSharedPreferences(AccountGeneral.ACCOUNT_TYPE, Context.MODE_PRIVATE).contains(AccountGeneral.ACCOUNT_NAME)) {
+        if (!getSharedPreferences(AccountGeneral.ACCOUNT_TYPE, Context.MODE_PRIVATE).contains(AccountGeneral.ACCOUNT_NAME)) {
             showAccountPicker(AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, false);
         } else {
             new Thread(new Runnable() {
@@ -40,8 +40,8 @@ public class StartupActivity extends Activity {
                 public void run() {
                     String authToken = getSharedPreferences(AccountGeneral.ACCOUNT_TYPE, Context.MODE_PRIVATE).getString(AccountGeneral.ACCOUNT_NAME, null);
                     try {
-                        HttpURLConnection connection = (HttpURLConnection) new URL("https://jak.codecamps.de/jak-login/login/validate/"+authToken).openConnection();
-                        if(connection.getResponseCode() == 200)
+                        HttpURLConnection connection = (HttpURLConnection) new URL("https://jak.codecamps.de/jak-login/login/validate/" + authToken).openConnection();
+                        if (connection.getResponseCode() == 200)
                             startActivity(new Intent(StartupActivity.this, BoardActivity.class));
                         else {
                             showAccountPicker(AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, false);
@@ -82,14 +82,14 @@ public class StartupActivity extends Activity {
             // Account picker
             mAlertDialog = new AlertDialog.Builder(this).setTitle(getString(R.string.choose_account)).setAdapter(new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_list_item_1, name),
                     new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if(invalidate)
-                        invalidateAuthToken(availableAccounts[which], authTokenType);
-                    else
-                        getExistingAccountAuthToken(availableAccounts[which], authTokenType);
-                }
-            }).create();
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (invalidate)
+                                invalidateAuthToken(availableAccounts[which], authTokenType);
+                            else
+                                getExistingAccountAuthToken(availableAccounts[which], authTokenType);
+                        }
+                    }).create();
             mAlertDialog.show();
         }
     }
@@ -117,7 +117,7 @@ public class StartupActivity extends Activity {
     }
 
     private void invalidateAuthToken(final Account account, String authTokenType) {
-        final AccountManagerFuture<Bundle> future = mAccountManager.getAuthToken(account, authTokenType, null, this, null,null);
+        final AccountManagerFuture<Bundle> future = mAccountManager.getAuthToken(account, authTokenType, null, this, null, null);
         new Thread(new Runnable() {
             @Override
             public void run() {

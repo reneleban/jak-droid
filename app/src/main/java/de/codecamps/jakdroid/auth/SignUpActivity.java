@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import de.codecamps.jakdroid.R;
 
-public class SignUpActivity extends Activity{
+public class SignUpActivity extends Activity {
     private String TAG = getClass().getSimpleName();
     private String mAccountType;
 
@@ -52,7 +52,7 @@ public class SignUpActivity extends Activity{
                 String authtoken = null;
                 Bundle data = new Bundle();
                 try {
-                    authtoken = AccountGeneral.sServerAuthenticate.userSignUp( accountName, accountPassword, "Full Access");
+                    authtoken = AccountGeneral.sServerAuthenticate.userSignUp(accountName, accountPassword, "Full Access");
 
                     data.putString(AccountManager.KEY_ACCOUNT_NAME, accountName);
                     data.putString(AccountManager.KEY_ACCOUNT_TYPE, mAccountType);

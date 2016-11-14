@@ -1,23 +1,13 @@
 package de.codecamps.jakdroid;
 
 import android.os.AsyncTask;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import de.codecamps.jakdroid.auth.AccountGeneral;
-import de.codecamps.jakdroid.data.Card;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class DeleteCard extends AsyncTask<String, Object, String> {
     private String authToken;
@@ -39,7 +29,7 @@ public class DeleteCard extends AsyncTask<String, Object, String> {
             connection.setRequestMethod("DELETE");
             connection.setRequestProperty("charset", "utf-8");
             connection.connect();
-            return connection.getResponseCode() == HttpURLConnection.HTTP_OK?params[0]:null;
+            return connection.getResponseCode() == HttpURLConnection.HTTP_OK ? params[0] : null;
         } catch (IOException e) {
             e.printStackTrace();
         }

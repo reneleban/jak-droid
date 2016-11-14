@@ -3,7 +3,6 @@ package de.codecamps.jakdroid;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import de.codecamps.jakdroid.auth.AccountGeneral;
 import de.codecamps.jakdroid.data.ListElement;
@@ -30,10 +29,10 @@ class UpdateListElements extends AsyncTask<String, Object, List<ListElement>> {
     @Override
     protected List<ListElement> doInBackground(String... params) {
         JSONArray listItems = null;
-        Log.d(AccountGeneral.ACCOUNT_NAME, "Fetching new Lists for Board "+params[0]);
+        Log.d(AccountGeneral.ACCOUNT_NAME, "Fetching new Lists for Board " + params[0]);
         try {
 
-            URL url = new URL("https://jak.codecamps.de/jak-list/lists/list/" + boardActivity.getAuthToken() + "/"+params[0]);
+            URL url = new URL("https://jak.codecamps.de/jak-list/lists/list/" + boardActivity.getAuthToken() + "/" + params[0]);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             if (connection != null && connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 try (InputStream in = new BufferedInputStream(connection.getInputStream());
@@ -65,9 +64,9 @@ class UpdateListElements extends AsyncTask<String, Object, List<ListElement>> {
     protected void onPostExecute(List<ListElement> listItems) {
         ViewPager viewPager = (ViewPager) boardActivity.findViewById(R.id.viewpager);
         BoardActivity.Adapter adapter = (BoardActivity.Adapter) viewPager.getAdapter();
-        Log.d(AccountGeneral.ACCOUNT_NAME, "Update adapterFragments before update: "+adapter.getCount());
+        Log.d(AccountGeneral.ACCOUNT_NAME, "Update adapterFragments before update: " + adapter.getCount());
         adapter.removeAllFragments();
-        for(ListElement element: listItems){
+        for (ListElement element : listItems) {
             Bundle arguments = new Bundle();
             arguments.putString("auth_token", boardActivity.getAuthToken());
             arguments.putString("list_id", element.getList_id());
@@ -78,6 +77,6 @@ class UpdateListElements extends AsyncTask<String, Object, List<ListElement>> {
             adapter.addFragment(cardContentFragment, element.getName());
         }
         adapter.notifyDataSetChanged();
-        Log.d(AccountGeneral.ACCOUNT_NAME, "Fragments after update: "+adapter.getCount());
+        Log.d(AccountGeneral.ACCOUNT_NAME, "Fragments after update: " + adapter.getCount());
     }
 }

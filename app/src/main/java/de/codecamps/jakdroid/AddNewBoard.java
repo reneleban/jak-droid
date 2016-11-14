@@ -2,7 +2,6 @@ package de.codecamps.jakdroid;
 
 import android.net.Uri;
 import android.os.AsyncTask;
-import de.codecamps.jakdroid.data.Board;
 import org.json.JSONException;
 import org.json.JSONObject;
 

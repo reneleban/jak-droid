@@ -3,6 +3,7 @@ package de.codecamps.jakdroid;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -16,10 +17,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-
 import android.util.Log;
 import android.view.*;
 import android.widget.EditText;
@@ -134,7 +132,7 @@ public class BoardActivity extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
 
-        public void removePosition(int pos){
+        public void removePosition(int pos) {
             mFragmentTitleList.remove(pos);
             mFragmentList.remove(pos);
         }

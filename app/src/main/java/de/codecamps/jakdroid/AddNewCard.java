@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import de.codecamps.jakdroid.data.Card;
 import org.json.JSONException;
 import org.json.JSONObject;

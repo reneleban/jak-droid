@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import de.codecamps.jakdroid.R;
 
-public class AuthenticatorActivity extends AccountAuthenticatorActivity{
+public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
     public final static String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
@@ -39,12 +39,12 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity{
 
         String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
         mAuthTokenType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
-        if(mAuthTokenType==null){
+        if (mAuthTokenType == null) {
             mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
         }
 
-        if(accountName != null){
-            ((TextView)findViewById(R.id.accountName)).setText(accountName);
+        if (accountName != null) {
+            ((TextView) findViewById(R.id.accountName)).setText(accountName);
         }
 
 
