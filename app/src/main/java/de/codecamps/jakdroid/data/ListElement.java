@@ -8,7 +8,8 @@ public class ListElement {
     private String list_id;
     private String name;
     private String owner;
-    public ListElement(JSONObject listElement) throws JSONException{
+
+    public ListElement(JSONObject listElement) throws JSONException {
         this.board_id = listElement.getString("board_id");
         this.list_id = listElement.getString("list_id");
         this.name = listElement.getString("name");

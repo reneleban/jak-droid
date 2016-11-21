@@ -3,22 +3,22 @@ package de.codecamps.jakdroid;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-
 import android.util.Log;
 import android.view.*;
 import android.widget.EditText;
@@ -35,37 +35,7 @@ public class BoardActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        // TODO: retrieve initial board and lists
-
         viewPager.setAdapter(adapter);
-    }
-
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.list, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.delete_board_toolbar:
-                // TODO Implement Delete current item load first board
-                return super.onOptionsItemSelected(item);
-            case R.id.add_new_list_toolbar:
-                if (getActiveBoardId() == null) {
-                    Snackbar.make(getCurrentFocus(), getString(R.string.no_board_chosen), Snackbar.LENGTH_LONG).show();
-                } else {
-                    showNewListDialog();
-                }
-                return super.onOptionsItemSelected(item);
-            case android.R.id.home: // show side menu, no break cause of super-call
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return super.onOptionsItemSelected(item);
-            default:
-                return super.onOptionsItemSelected(item);
-
-        }
     }
 
     @Override
@@ -85,10 +55,9 @@ public class BoardActivity extends AppCompatActivity {
         TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
-
+        // initialize drawer navigation
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         new UpdateBoardList(this).execute();
-
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
 
         // Adding menu icon to Toolbar
@@ -100,12 +69,10 @@ public class BoardActivity extends AppCompatActivity {
 
         // Set behavior of Navigation drawer
         NavigationView.OnNavigationItemSelectedListener navigationItemListener = new BoardOnNavigationItemSelectedListener(toolbar);
+        navigationView.setNavigationItemSelectedListener(navigationItemListener);
 
-        navigationView.setNavigationItemSelectedListener(
-                navigationItemListener);
-
+        // add new card button
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,18 +80,183 @@ public class BoardActivity extends AppCompatActivity {
                 if (getActiveBoardId() == null) {
                     Snackbar.make(getCurrentFocus(), getString(R.string.no_list_chosen), Snackbar.LENGTH_LONG).show();
                 } else {
-                    TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
-
-                    BoardActivity.Adapter adapter = ((Adapter) ((ViewPager) findViewById(R.id.viewpager)).getAdapter());
-                    Fragment fragment = adapter.getItem(tabs.getSelectedTabPosition());
-                    Bundle b = fragment.getArguments();
-                    String listId = b.getString("uuid");
-
-                    Snackbar.make(v, "TODO: add new card to list: " + listId,
-                            Snackbar.LENGTH_LONG).show();
+                    showNewCardDialog();
                 }
             }
         });
+
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.list, menu);
+        return true;
+    }
+
+    /**
+     * Fragment Adapter for ViewPager
+     */
+    class Adapter extends FragmentStatePagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        Adapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        void removeAllFragments() {
+            mFragmentList.clear();
+            mFragmentTitleList.clear();
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
+
+        public void removePosition(int pos) {
+            mFragmentTitleList.remove(pos);
+            mFragmentList.remove(pos);
+        }
+    }
+
+    // add new list, open drawer (offcanvas)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete_list_toolbar:
+                ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+
+                BoardActivity.Adapter adapter = ((Adapter) ((ViewPager) findViewById(R.id.viewpager)).getAdapter());
+
+                Fragment fragment = adapter.getItem(viewPager.getCurrentItem());
+                Bundle b = fragment.getArguments();
+                final String listId = b.getString("list_id");
+                adapter.removePosition(viewPager.getCurrentItem());
+                adapter.notifyDataSetChanged();
+
+                new DeleteList(authToken).execute(listId);
+
+                return super.onOptionsItemSelected(item);
+            case R.id.add_new_list_toolbar:
+                if (getActiveBoardId() == null) {
+                    Snackbar.make(getCurrentFocus(), getString(R.string.no_board_chosen), Snackbar.LENGTH_LONG).show();
+                } else {
+                    showNewListDialog();
+                }
+                return super.onOptionsItemSelected(item);
+            case android.R.id.home: // show side menu, no break cause of super-call
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+    private class BoardOnNavigationItemSelectedListener implements NavigationView.OnNavigationItemSelectedListener {
+        private final Toolbar toolbar;
+
+        BoardOnNavigationItemSelectedListener(Toolbar toolbar) {
+            this.toolbar = toolbar;
+        }
+
+        // select board and load lists
+        @Override
+        public boolean onNavigationItemSelected(MenuItem menuItem) {
+            if (menuItem.getItemId() == R.id.add_new_board) {
+                showNewBoardDialog();
+            } else if (menuItem.getItemId() == R.id.delete_board){
+
+                new DeleteBoard(authToken, boardActivityReference).execute(getActiveBoardId());
+            } else {
+
+                /**
+                 * TODO: find better uncheck solution!
+                 */
+                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                SubMenu boards = navigationView.getMenu().findItem(0).getSubMenu();
+                for (int i = 0; i < boards.size(); i++) {
+                    boards.getItem(i).setChecked(false);
+                }
+
+                // Set item in checked state
+                menuItem.setChecked(true);
+                Intent intent = menuItem.getIntent();
+                if (intent != null) {
+                    String boardId = intent.getStringExtra("board_id");
+                    toolbar.setTitle(intent.getStringExtra("board_name"));
+                    if (boardId != null && !boardId.isEmpty()) {
+                        activeBoardId = boardId;
+                        Log.d(AccountGeneral.ACCOUNT_NAME, String.format("Called item with uuid: %s", boardId));
+                        new UpdateListElements(boardActivityReference).execute(boardId);
+                    }
+                }
+            }
+            mDrawerLayout.closeDrawers();
+            return true;
+        }
+    }
+
+    void loadFirstBoard(){
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        SubMenu boards = navigationView.getMenu().findItem(0).getSubMenu();
+        boards.getItem(0).setChecked(true);
+        Intent intent = boards.getItem(0).getIntent();
+        activeBoardId = intent.getStringExtra("board_id");
+        toolbar.setTitle(intent.getStringExtra("board_name"));
+        new UpdateListElements(boardActivityReference).execute(activeBoardId);
+    }
+
+    private void showNewCardDialog() {
+        TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        final BoardActivity.Adapter adapter = ((Adapter) viewPager.getAdapter());
+        Fragment fragment = adapter.getItem(tabs.getSelectedTabPosition());
+        Bundle b = fragment.getArguments();
+        final String listId = b.getString("list_id");
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.dialog_new_card, null);
+        dialogBuilder.setView(dialogView);
+        final EditText edt = (EditText) dialogView.findViewById(R.id.new_card_title);
+        dialogBuilder.setTitle(getString(R.string.add_new_card));
+        dialogBuilder.setMessage(getString(R.string.add_new_card_name));
+        dialogBuilder.setPositiveButton(getString(R.string.add_new_card_button_positive), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                RecyclerView recyclerView = (RecyclerView) (adapter.getItem(viewPager.getCurrentItem())).getView();
+                new AddNewCard(getAuthToken(), recyclerView).execute(listId, edt.getText().toString());
+            }
+        });
+        dialogBuilder.setNegativeButton(getString(R.string.add_new_card_button_negative), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                edt.setText("");
+            }
+        });
+        AlertDialog ad = dialogBuilder.create();
+        ad.show();
     }
 
     private void showNewBoardDialog() {
@@ -175,78 +307,11 @@ public class BoardActivity extends AppCompatActivity {
         b.show();
     }
 
-
-    static class Adapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        Adapter(FragmentManager manager) {
-            super(manager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
-
-        void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        void removeAllFragments() {
-            mFragmentList.clear();
-            mFragmentTitleList.clear();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
-    }
-
-
     String getActiveBoardId() {
         return activeBoardId;
     }
 
     String getAuthToken() {
         return authToken;
-    }
-
-
-    private class BoardOnNavigationItemSelectedListener implements NavigationView.OnNavigationItemSelectedListener {
-        private final Toolbar toolbar;
-
-        BoardOnNavigationItemSelectedListener(Toolbar toolbar) {
-            this.toolbar = toolbar;
-        }
-
-        @Override
-        public boolean onNavigationItemSelected(MenuItem menuItem) {
-            if (menuItem.getItemId() == R.id.add_new_board) {
-                showNewBoardDialog();
-            } else {
-                // Set item in checked state
-                menuItem.setChecked(true);
-                Intent intent = menuItem.getIntent();
-                if (intent != null) {
-                    String boardId = intent.getStringExtra("board_id");
-                    toolbar.setTitle(intent.getStringExtra("board_name"));
-                    if (boardId != null && !boardId.isEmpty()) {
-                        activeBoardId = boardId;
-                        Log.d(AccountGeneral.ACCOUNT_NAME, String.format("Called item with uuid: %s", boardId));
-                        new UpdateListElements(boardActivityReference).execute(boardId); // load board lists and update views!
-                    }
-                }
-            }
-            mDrawerLayout.closeDrawers();
-            return true;
-        }
     }
 }

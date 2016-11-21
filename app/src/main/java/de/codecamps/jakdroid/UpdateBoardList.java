@@ -9,21 +9,13 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import de.codecamps.jakdroid.auth.AccountGeneral;
 import de.codecamps.jakdroid.data.Board;
-import org.json.JSONArray;
+import de.codecamps.jakdroid.helpers.AsyncTaskHelpers;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.Collator;
 import java.util.*;
 
-/**
- * Created by rene on 03.09.16.
- */
 class UpdateBoardList extends AsyncTask<String, Object, List<Board>> {
     private BoardActivity boardActivity;
 
@@ -31,56 +23,24 @@ class UpdateBoardList extends AsyncTask<String, Object, List<Board>> {
         this.boardActivity = boardActivity;
     }
 
-    @Override
-    protected List<Board> doInBackground(String... params) {
-        JSONArray boards = null;
-
-        try {
-
-            URL url = new URL("https://jak.codecamps.de/jak-board/board/" + boardActivity.getAuthToken());
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            if (connection != null && connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                try (InputStream in = new BufferedInputStream(connection.getInputStream());
-                     Scanner s = new Scanner(in).useDelimiter("\\A");) {
-                    String response = s.hasNext() ? s.next() : null;
-                    boards = new JSONArray(response);
-                } catch (IOException | JSONException e) {
-                    e.printStackTrace();
-                } finally {
-                    connection.disconnect();
-                }
-            }
-
-            List<Board> boardList = new ArrayList<>();
-
-            for (int i = 0; i < boards.length(); i++) {
-                JSONObject board = boards.getJSONObject(i);
-                boardList.add(new Board(board));
-            }
-            return boardList;
-        } catch (IOException | JSONException e) {
-            Log.e(AccountGeneral.ACCOUNT_NAME, "Error while loading Boards", e);
-            return new ArrayList<>();
-        }
-    }
-
-    @Override
-    protected void onPostExecute(List<Board> boards) {
+    private static void generateBoardNavigation(List<Board> boards, BoardActivity boardActivity) {
         NavigationView navigationView = (NavigationView) boardActivity.findViewById(R.id.nav_view);
         Menu navMenu = navigationView.getMenu();
 
         int menuId = -1;
-        for(int i=0; i< navMenu.size(); i++){
-            if(boardActivity.getString(R.string.menu_boards).equalsIgnoreCase(navMenu.getItem(i).getTitle().toString())){
+        for (int i = 0; i < navMenu.size(); i++) {
+            if (boardActivity.getString(R.string.menu_boards).equalsIgnoreCase(navMenu.getItem(i).getTitle().toString())) {
                 menuId = i;
             }
         }
 
         SubMenu subMenu;
-        if(menuId == -1)
+        if (menuId == -1)
             subMenu = navMenu.addSubMenu(R.string.menu_boards);
         else
             subMenu = navMenu.getItem(menuId).getSubMenu();
+
+        subMenu.clear();
 
         List<Board> boardList = boards;
         final Collator c = Collator.getInstance();
@@ -99,5 +59,22 @@ class UpdateBoardList extends AsyncTask<String, Object, List<Board>> {
             m.setIntent(intent);
         }
 
+        boardActivity.loadFirstBoard();
     }
+
+    @Override
+    protected List<Board> doInBackground(String... params) {
+        try {
+            return AsyncTaskHelpers.retrieveBoards(boardActivity.getAuthToken());
+        } catch (IOException | JSONException e) {
+            Log.e(AccountGeneral.ACCOUNT_NAME, "Error while loading Boards", e);
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    protected void onPostExecute(List<Board> boards) {
+        generateBoardNavigation(boards, boardActivity);
+    }
+
 }

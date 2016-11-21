@@ -5,7 +5,7 @@
             android:title="@string/add_new_list"
     />
     <item
-            android:id="@+id/delete_board_toolbar"
-            android:title="@string/delete_board"
+            android:id="@+id/delete_list_toolbar"
+            android:title="@string/delete_list"
     />
 </menu>

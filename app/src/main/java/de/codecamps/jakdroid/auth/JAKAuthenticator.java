@@ -11,7 +11,7 @@ import de.codecamps.jakdroid.R;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 
-public class JAKAuthenticator extends AbstractAccountAuthenticator{
+public class JAKAuthenticator extends AbstractAccountAuthenticator {
     private final String TAG = "JAKAuthenticator";
     private final Context mContext;
 
@@ -40,7 +40,7 @@ public class JAKAuthenticator extends AbstractAccountAuthenticator{
     public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options) throws NetworkErrorException {
         Log.d(AccountGeneral.ACCOUNT_NAME, TAG + "> getAuthToken");
 
-        if(!authTokenType.equals(AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS)){
+        if (!authTokenType.equals(AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS)) {
             final Bundle result = new Bundle();
             result.putString(AccountManager.KEY_ERROR_MESSAGE, Resources.getSystem().getString(R.string.error_invalid_token_type));
             return result;
@@ -49,20 +49,20 @@ public class JAKAuthenticator extends AbstractAccountAuthenticator{
         final AccountManager am = AccountManager.get(mContext);
         String authToken = am.peekAuthToken(account, authTokenType);
 
-        Log.d(AccountGeneral.ACCOUNT_NAME, TAG + "> peekAuthToken returned: "+authToken);
+        Log.d(AccountGeneral.ACCOUNT_NAME, TAG + "> peekAuthToken returned: " + authToken);
 
-        if(TextUtils.isEmpty(authToken)){
+        if (TextUtils.isEmpty(authToken)) {
             final String password = am.getPassword(account);
-            if(password != null){
-                try{
+            if (password != null) {
+                try {
                     authToken = AccountGeneral.sServerAuthenticate.userSignIn(account.name, password, authTokenType);
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
 
-        if(!TextUtils.isEmpty(authToken)){
+        if (!TextUtils.isEmpty(authToken)) {
             final Bundle result = new Bundle();
             result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
             result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
