@@ -36,7 +36,7 @@ public class DeleteCard extends AsyncTask<String, Object, String> {
 
         super.onPostExecute(cardId);
 
-        CardContentFragment.ContentAdapter adapter = (CardContentFragment.ContentAdapter) recyclerView.getAdapter();
+        CardContentAdapter adapter = (CardContentAdapter) recyclerView.getAdapter();
         adapter.remove(cardId);
         adapter.notifyDataSetChanged();
         recyclerView.refreshDrawableState();

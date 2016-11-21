@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import de.codecamps.jakdroid.helpers.AsyncTaskHelpers;
 import org.json.JSONObject;
 
-import java.io.*;
+import java.io.IOException;
 
 
 class AddNewList extends AsyncTask<String, Object, JSONObject> {

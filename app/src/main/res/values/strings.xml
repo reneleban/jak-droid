@@ -44,7 +44,7 @@
     <string name="menu_boards">Boards</string>
     <string name="delete_list">Delete List</string>
     <string name="no_board_chosen">Please choose board first!</string>
-    <string name="no_list_chosen">Please choose list first!</string>
+    <string name="error_add_card_without_chosen_list">Please choose list first!</string>
     <string name="add_new_card">Add new Card</string>
     <string name="add_new_card_name">Name</string>
     <string name="add_new_card_button_positive">Add</string>

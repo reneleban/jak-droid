@@ -1,12 +1,5 @@
 package de.codecamps.jakdroid.helpers;
 
-import android.content.Intent;
-import android.content.res.Resources;
-import android.support.design.widget.NavigationView;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.SubMenu;
-import de.codecamps.jakdroid.BoardActivity;
 import de.codecamps.jakdroid.R;
 import de.codecamps.jakdroid.data.Board;
 import de.codecamps.jakdroid.data.Card;
@@ -18,8 +11,9 @@ import org.json.JSONObject;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.Collator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class AsyncTaskHelpers {
 
@@ -46,7 +40,7 @@ public class AsyncTaskHelpers {
     }
 
     public static String deleteBoard(String authToken, String boardId) throws IOException {
-        URL url = new URL(App.getContext().getString(R.string.DELETE_BOARDS_URL, authToken,  boardId));
+        URL url = new URL(App.getContext().getString(R.string.DELETE_BOARDS_URL, authToken, boardId));
         HttpURLConnection connection = getHttpURLConnection(url, REQUEST_METHOD_DELETE);
         return connection.getResponseCode() == HttpURLConnection.HTTP_OK ? boardId : null;
     }
@@ -72,10 +66,10 @@ public class AsyncTaskHelpers {
     }
 
     public static String deleteListAndCards(String authToken, String listId) throws IOException {
-        URL url = new URL(App.getContext().getString(R.string.DELETE_CARDS_FROM_LIST_URL, authToken,  listId));
+        URL url = new URL(App.getContext().getString(R.string.DELETE_CARDS_FROM_LIST_URL, authToken, listId));
         HttpURLConnection connection = getHttpURLConnection(url, REQUEST_METHOD_DELETE);
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            url = new URL(App.getContext().getString(R.string.DELETE_LIST_URL, authToken,  listId));
+            url = new URL(App.getContext().getString(R.string.DELETE_LIST_URL, authToken, listId));
             connection = getHttpURLConnection(url, REQUEST_METHOD_DELETE);
             return connection.getResponseCode() == HttpURLConnection.HTTP_OK ? listId : null;
         } else return null;

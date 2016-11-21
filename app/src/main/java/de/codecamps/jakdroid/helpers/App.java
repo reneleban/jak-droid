@@ -3,7 +3,7 @@ package de.codecamps.jakdroid.helpers;
 import android.app.Application;
 import android.content.Context;
 
-public class App extends Application{
+public class App extends Application {
 
     private static Context mContext;
 
@@ -13,7 +13,7 @@ public class App extends Application{
         mContext = this;
     }
 
-    public static Context getContext(){
+    public static Context getContext() {
         return mContext;
     }
 }

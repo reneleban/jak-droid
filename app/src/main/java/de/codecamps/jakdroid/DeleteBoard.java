@@ -8,8 +8,6 @@ import de.codecamps.jakdroid.helpers.AsyncTaskHelpers;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 
 public class DeleteBoard extends AsyncTask<String, Object, String> {
@@ -36,7 +34,7 @@ public class DeleteBoard extends AsyncTask<String, Object, String> {
             /**
              * delete all lists
              */
-            for(ListElement listElement : listElementsList){
+            for (ListElement listElement : listElementsList) {
                 AsyncTaskHelpers.deleteListAndCards(authToken, listElement.getList_id());
             }
             /**

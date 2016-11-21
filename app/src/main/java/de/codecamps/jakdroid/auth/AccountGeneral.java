@@ -5,7 +5,7 @@ public class AccountGeneral {
     public static final String ACCOUNT_NAME = "JAK Droid";
 
     public static final String AUTHTOKEN_TYPE_FULL_ACCESS = "Full Access";
-    public static final String AUTHTOKEN_TYPE_FULL_ACCESS_LABEL = "Full Access to a JAK Account";
+    static final String AUTHTOKEN_TYPE_FULL_ACCESS_LABEL = "Full Access to a JAK Account";
 
-    public static final ServerAuthenticate sServerAuthenticate = new JAKDroidServerAuthenticate();
+    static final ServerAuthenticate sServerAuthenticate = new JAKDroidServerAuthenticate();
 }

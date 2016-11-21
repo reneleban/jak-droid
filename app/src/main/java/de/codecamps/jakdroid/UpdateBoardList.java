@@ -14,7 +14,10 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.text.Collator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 class UpdateBoardList extends AsyncTask<String, Object, List<Board>> {
     private BoardActivity boardActivity;

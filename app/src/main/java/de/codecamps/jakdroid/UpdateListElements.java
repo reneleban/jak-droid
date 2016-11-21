@@ -35,7 +35,7 @@ class UpdateListElements extends AsyncTask<String, Object, List<ListElement>> {
     @Override
     protected void onPostExecute(List<ListElement> listItems) {
         ViewPager viewPager = (ViewPager) boardActivity.findViewById(R.id.viewpager);
-        BoardActivity.Adapter adapter = (BoardActivity.Adapter) viewPager.getAdapter();
+        ListAdapter adapter = (ListAdapter) viewPager.getAdapter();
         Log.d(AccountGeneral.ACCOUNT_NAME, "Update adapterFragments before update: " + adapter.getCount());
         adapter.removeAllFragments();
         for (ListElement element : listItems) {

@@ -2,14 +2,13 @@ package de.codecamps.jakdroid;
 
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import de.codecamps.jakdroid.data.Card;
 import de.codecamps.jakdroid.helpers.AsyncTaskHelpers;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.*;
+import java.io.IOException;
 
 
 class AddNewCard extends AsyncTask<String, Object, JSONObject> {
@@ -34,7 +33,7 @@ class AddNewCard extends AsyncTask<String, Object, JSONObject> {
     }
 
     protected void onPostExecute(JSONObject jsonObject) {
-        CardContentFragment.ContentAdapter adapter = (CardContentFragment.ContentAdapter) recyclerView.getAdapter();
+        CardContentAdapter adapter = (CardContentAdapter) recyclerView.getAdapter();
         try {
             adapter.add(new Card(jsonObject));
             adapter.notifyDataSetChanged();

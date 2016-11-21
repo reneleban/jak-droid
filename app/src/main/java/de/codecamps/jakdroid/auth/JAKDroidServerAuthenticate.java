@@ -10,13 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
-/**
- * http://blog.udinic.com/2013/04/24/write-your-own-android-authenticator/
- * https://github.com/Udinic/AccountAuthenticator/blob/master/ExampleApp2/src/com/udinic/accounts_example2/Main2.java
- * https://github.com/Udinic/AccountAuthenticator/blob/master/src/com/udinic/accounts_authenticator_example/authentication/ParseComServerAuthenticate.java
- */
-
-public class JAKDroidServerAuthenticate implements ServerAuthenticate {
+class JAKDroidServerAuthenticate implements ServerAuthenticate {
     @Override
     public String userSignUp(String name, String pass, String authTokenType) throws Exception {
         String authToken = null;

@@ -11,11 +11,11 @@ import de.codecamps.jakdroid.R;
 
 import static android.accounts.AccountManager.KEY_BOOLEAN_RESULT;
 
-public class JAKAuthenticator extends AbstractAccountAuthenticator {
+class JAKAuthenticator extends AbstractAccountAuthenticator {
     private final String TAG = "JAKAuthenticator";
     private final Context mContext;
 
-    public JAKAuthenticator(Context context) {
+    JAKAuthenticator(Context context) {
         super(context);
         this.mContext = context;
     }
