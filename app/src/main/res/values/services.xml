@@ -2,6 +2,7 @@
 <resources>
     <string name="ADD_NEW_BOARD_URL" formatted="false" translatable="false">https://jak.codecamps.de/jak-board/board/%s</string>
     <string name="RETRIEVE_BOARDS_URL" formatted="false" translatable="false">https://jak.codecamps.de/jak-board/board/%s</string>
+    <string name="DELETE_BOARDS_URL" formatted="false" translatable="false">https://jak.codecamps.de/jak-board/board/%s/%s</string>
 
     <string name="ADD_NEW_CARD_URL" formatted="false" translatable="false">https://jak.codecamps.de/jak-card/cards/%s/%s</string>
     <string name="RETRIEVE_CARDS_URL" formatted="false" translatable="false">https://jak.codecamps.de/jak-card/cards/%s/%s</string>

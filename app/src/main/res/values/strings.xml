@@ -36,13 +36,6 @@
     <string name="add_new_board_button_negative">Cancel</string>
     <string name="error_loading_boards">Error while loading Boards</string>
 
-
-
-    <!-- examples -->
-    <string name="item_title">Palais Garnier</string>
-    <string name="item_desc">The Palais Garnier which locates in Paris was built from 1861 for
-        the Paris Opera.
-    </string>
     <string name="add_new_list">Add new List</string>
     <string name="add_new_list_name">Name</string>
     <string name="add_new_list_button_positive">Add</string>

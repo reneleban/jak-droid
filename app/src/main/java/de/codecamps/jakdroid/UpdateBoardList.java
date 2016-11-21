@@ -10,7 +10,6 @@ import android.view.SubMenu;
 import de.codecamps.jakdroid.auth.AccountGeneral;
 import de.codecamps.jakdroid.data.Board;
 import de.codecamps.jakdroid.helpers.AsyncTaskHelpers;
-import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -24,18 +23,7 @@ class UpdateBoardList extends AsyncTask<String, Object, List<Board>> {
         this.boardActivity = boardActivity;
     }
 
-    @Override
-    protected List<Board> doInBackground(String... params) {
-        try {
-            return AsyncTaskHelpers.retrieveBoards(boardActivity.getAuthToken());
-        } catch (IOException | JSONException e) {
-            Log.e(AccountGeneral.ACCOUNT_NAME, "Error while loading Boards", e);
-            return new ArrayList<>();
-        }
-    }
-
-    @Override
-    protected void onPostExecute(List<Board> boards) {
+    private static void generateBoardNavigation(List<Board> boards, BoardActivity boardActivity) {
         NavigationView navigationView = (NavigationView) boardActivity.findViewById(R.id.nav_view);
         Menu navMenu = navigationView.getMenu();
 
@@ -51,6 +39,8 @@ class UpdateBoardList extends AsyncTask<String, Object, List<Board>> {
             subMenu = navMenu.addSubMenu(R.string.menu_boards);
         else
             subMenu = navMenu.getItem(menuId).getSubMenu();
+
+        subMenu.clear();
 
         List<Board> boardList = boards;
         final Collator c = Collator.getInstance();
@@ -69,5 +59,22 @@ class UpdateBoardList extends AsyncTask<String, Object, List<Board>> {
             m.setIntent(intent);
         }
 
+        boardActivity.loadFirstBoard();
     }
+
+    @Override
+    protected List<Board> doInBackground(String... params) {
+        try {
+            return AsyncTaskHelpers.retrieveBoards(boardActivity.getAuthToken());
+        } catch (IOException | JSONException e) {
+            Log.e(AccountGeneral.ACCOUNT_NAME, "Error while loading Boards", e);
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    protected void onPostExecute(List<Board> boards) {
+        generateBoardNavigation(boards, boardActivity);
+    }
+
 }

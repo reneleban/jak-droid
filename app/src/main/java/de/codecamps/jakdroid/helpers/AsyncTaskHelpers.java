@@ -1,6 +1,12 @@
 package de.codecamps.jakdroid.helpers;
 
+import android.content.Intent;
 import android.content.res.Resources;
+import android.support.design.widget.NavigationView;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.SubMenu;
+import de.codecamps.jakdroid.BoardActivity;
 import de.codecamps.jakdroid.R;
 import de.codecamps.jakdroid.data.Board;
 import de.codecamps.jakdroid.data.Card;
@@ -12,24 +18,16 @@ import org.json.JSONObject;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.text.Collator;
+import java.util.*;
 
 public class AsyncTaskHelpers {
+
+    public static final String REQUEST_METHOD_DELETE = "DELETE";
+
     public static JSONObject addNewBoard(String authToken, String query) throws IOException {
         URL url = new URL(App.getContext().getString(R.string.ADD_NEW_BOARD_URL, authToken));
         return getJsonObject("PUT", url, query);
-    }
-
-    public static JSONObject addNewList(String authToken, String boardId, String query) throws IOException {
-        URL url = new URL(App.getContext().getString(R.string.ADD_NEW_LIST_URL, authToken, boardId));
-        return getJsonObject("POST", url, query);
-    }
-
-    public static JSONObject addNewCard(String authToken, String listId, String query) throws IOException {
-        URL url = new URL(App.getContext().getString(R.string.ADD_NEW_CARD_URL, authToken, listId));
-        return getJsonObject("POST", url, query);
     }
 
     public static List<Board> retrieveBoards(String authToken) throws IOException, JSONException {
@@ -47,6 +45,17 @@ public class AsyncTaskHelpers {
         return boardList;
     }
 
+    public static String deleteBoard(String authToken, String boardId) throws IOException {
+        URL url = new URL(App.getContext().getString(R.string.DELETE_BOARDS_URL, authToken,  boardId));
+        HttpURLConnection connection = getHttpURLConnection(url, REQUEST_METHOD_DELETE);
+        return connection.getResponseCode() == HttpURLConnection.HTTP_OK ? boardId : null;
+    }
+
+    public static JSONObject addNewList(String authToken, String boardId, String query) throws IOException {
+        URL url = new URL(App.getContext().getString(R.string.ADD_NEW_LIST_URL, authToken, boardId));
+        return getJsonObject("POST", url, query);
+    }
+
     public static List<ListElement> retrieveListElements(String authToken, String boardId) throws IOException, JSONException {
         URL url = new URL(App.getContext().getString(R.string.RETRIEVE_LISTS_URL, authToken, boardId));
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -60,6 +69,21 @@ public class AsyncTaskHelpers {
             }
         }
         return listElementList;
+    }
+
+    public static String deleteListAndCards(String authToken, String listId) throws IOException {
+        URL url = new URL(App.getContext().getString(R.string.DELETE_CARDS_FROM_LIST_URL, authToken,  listId));
+        HttpURLConnection connection = getHttpURLConnection(url, REQUEST_METHOD_DELETE);
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            url = new URL(App.getContext().getString(R.string.DELETE_LIST_URL, authToken,  listId));
+            connection = getHttpURLConnection(url, REQUEST_METHOD_DELETE);
+            return connection.getResponseCode() == HttpURLConnection.HTTP_OK ? listId : null;
+        } else return null;
+    }
+
+    public static JSONObject addNewCard(String authToken, String listId, String query) throws IOException {
+        URL url = new URL(App.getContext().getString(R.string.ADD_NEW_CARD_URL, authToken, listId));
+        return getJsonObject("POST", url, query);
     }
 
     public static List<Card> retrieveCards(String authToken, String listId) throws IOException, JSONException {
@@ -80,24 +104,14 @@ public class AsyncTaskHelpers {
 
     public static String deleteCard(String authToken, String cardId) throws IOException {
         URL url = new URL(App.getContext().getString(R.string.RETRIEVE_CARDS_URL, authToken, cardId));
-        HttpURLConnection connection = getHttpURLConnection(url);
+        HttpURLConnection connection = getHttpURLConnection(url, REQUEST_METHOD_DELETE);
         return connection.getResponseCode() == HttpURLConnection.HTTP_OK ? cardId : null;
     }
 
-    public static String deleteListAndCards(String authToken, String listId) throws IOException {
-        URL url = new URL(App.getContext().getString(R.string.DELETE_CARDS_FROM_LIST_URL, authToken,  listId));
-        HttpURLConnection connection = getHttpURLConnection(url);
-        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            url = new URL(App.getContext().getString(R.string.DELETE_LIST_URL, authToken,  listId));
-            connection = getHttpURLConnection(url);
-            return connection.getResponseCode() == HttpURLConnection.HTTP_OK ? listId : null;
-        } else return null;
-    }
-
-    private static HttpURLConnection getHttpURLConnection(URL url) throws IOException {
+    private static HttpURLConnection getHttpURLConnection(URL url, String requestMethod) throws IOException {
         HttpURLConnection connection;
         connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("DELETE");
+        connection.setRequestMethod(requestMethod);
         connection.setRequestProperty("charset", "utf-8");
         connection.connect();
         return connection;

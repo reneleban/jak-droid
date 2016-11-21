@@ -84,6 +84,7 @@ public class BoardActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -185,6 +186,9 @@ public class BoardActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(MenuItem menuItem) {
             if (menuItem.getItemId() == R.id.add_new_board) {
                 showNewBoardDialog();
+            } else if (menuItem.getItemId() == R.id.delete_board){
+
+                new DeleteBoard(authToken, boardActivityReference).execute(getActiveBoardId());
             } else {
 
                 /**
@@ -205,13 +209,24 @@ public class BoardActivity extends AppCompatActivity {
                     if (boardId != null && !boardId.isEmpty()) {
                         activeBoardId = boardId;
                         Log.d(AccountGeneral.ACCOUNT_NAME, String.format("Called item with uuid: %s", boardId));
-                        new UpdateListElements(boardActivityReference).execute(boardId); // load board lists and update views!
+                        new UpdateListElements(boardActivityReference).execute(boardId);
                     }
                 }
             }
             mDrawerLayout.closeDrawers();
             return true;
         }
+    }
+
+    void loadFirstBoard(){
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        SubMenu boards = navigationView.getMenu().findItem(0).getSubMenu();
+        boards.getItem(0).setChecked(true);
+        Intent intent = boards.getItem(0).getIntent();
+        activeBoardId = intent.getStringExtra("board_id");
+        toolbar.setTitle(intent.getStringExtra("board_name"));
+        new UpdateListElements(boardActivityReference).execute(activeBoardId);
     }
 
     private void showNewCardDialog() {

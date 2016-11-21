@@ -14,29 +14,37 @@ import java.util.List;
 
 public class DeleteBoard extends AsyncTask<String, Object, String> {
     private String authToken;
+    private BoardActivity boardActivity;
 
 
-    public DeleteBoard(String authToken) {
+    public DeleteBoard(String authToken, BoardActivity boardActivity) {
         Log.d(AccountGeneral.ACCOUNT_NAME, "DeleteCard instanciate");
         this.authToken = authToken;
+        this.boardActivity = boardActivity;
     }
 
     @Override
     protected String doInBackground(String... params) {
-        Log.d(AccountGeneral.ACCOUNT_NAME, String.format("DeleteList / doInBackground  list: %s", params[0]));
+        Log.d(AccountGeneral.ACCOUNT_NAME, String.format("DeleteBoard / doInBackground  list: %s", params[0]));
 
+        String boardId = params[0];
         /**
          * fetch lists
          */
         try {
-            List<ListElement> listElementsList = AsyncTaskHelpers.retrieveListElements(authToken, params[0]);
+            List<ListElement> listElementsList = AsyncTaskHelpers.retrieveListElements(authToken, boardId);
             /**
              * delete all lists
              */
             for(ListElement listElement : listElementsList){
                 AsyncTaskHelpers.deleteListAndCards(authToken, listElement.getList_id());
             }
+            /**
+             * delete board
+             */
+            AsyncTaskHelpers.deleteBoard(authToken, boardId);
 
+            return boardId;
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -44,46 +52,16 @@ public class DeleteBoard extends AsyncTask<String, Object, String> {
             e.printStackTrace();
         }
 
-
-
-
-        /**
-         * delete board
-         */
-
-
-
-
-
-
-
-
-
-
-        try {
-            URL url = new URL("https://jak.codecamps.de/jak-card/cards/list/" + authToken + "/" + params[0]);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("DELETE");
-            connection.setRequestProperty("charset", "utf-8");
-            connection.connect();
-            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                url = new URL("https://jak.codecamps.de/jak-list/lists/list/" + authToken + "/" + params[0]);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("DELETE");
-                connection.setRequestProperty("charset", "utf-8");
-                connection.connect();
-                return connection.getResponseCode() == HttpURLConnection.HTTP_OK ? params[0] : null;
-            } else return null;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return null;
     }
 
     @Override
-    protected void onPostExecute(String listId) {
-        Log.d(AccountGeneral.ACCOUNT_NAME, String.format("DeleteList / onPostExecute  item: %s", listId));
+    protected void onPostExecute(String boardId) {
+        Log.d(AccountGeneral.ACCOUNT_NAME, String.format("DeleteBoard / onPostExecute  item: %s", boardId));
 
-        super.onPostExecute(listId);
+        super.onPostExecute(boardId);
+
+        new UpdateBoardList(boardActivity).execute();
+
     }
 }
